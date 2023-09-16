@@ -12,12 +12,20 @@ func main() {
 
 	r.Any("*path", func(c *gin.Context) {
 		path := c.Param("path")
-		c.JSON(200, gin.H{
+		resp := gin.H{
 			"path":   path,
 			"host":   c.Request.Host,
 			"header": c.Request.Header,
 			"url":    c.Request.URL,
-		})
+		}
+		if token := c.GetHeader("x-api-token"); token != "" {
+			if token != "abcd1234" {
+				c.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+		}
+
+		c.JSON(200, resp)
 	})
 
 	srv := http.Server{
