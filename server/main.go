@@ -13,7 +13,10 @@ func main() {
 	r.Any("*path", func(c *gin.Context) {
 		path := c.Param("path")
 		c.JSON(200, gin.H{
-			"path": path,
+			"path":   path,
+			"host":   c.Request.Host,
+			"header": c.Request.Header,
+			"url":    c.Request.URL,
 		})
 	})
 
